@@ -3,799 +3,334 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>🌾 ফার্মিং গেম</title>
+  <title>ЁЯМ╛ ржлрж╛рж░рзНржорж┐ржВ ржЧрзЗржо</title>
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <link href="https://fonts.googleapis.com/css2?family=Baloo+Da+2:wght@400;600;700;800&family=Hind+Siliguri:wght@400;500;600&display=swap" rel="stylesheet">
   <style>
     :root {
-      --green: #2d8a4e;
-      --green-light: #4caf72;
-      --green-dark: #1a5c32;
-      --yellow: #f5c842;
-      --orange: #f0893a;
-      --blue: #3a9fd4;
-      --purple: #8b5cf6;
-      --red: #e74c3c;
-      --bg: #0f1f0f;
-      --bg2: #162816;
-      --bg3: #1e3a1e;
-      --card: #1a3020;
-      --card2: #213828;
-      --text: #e8f5e0;
-      --text2: #a8c89a;
-      --border: #2d4a2d;
+      --green: #2d8a4e; --green-light: #4caf72; --green-dark: #1a5c32;
+      --yellow: #f5c842; --orange: #f0893a; --blue: #3a9fd4;
+      --bg: #0f1f0f; --bg2: #162816; --bg3: #1e3a1e;
+      --card: #1a3020; --card2: #213828;
+      --text: #e8f5e0; --text2: #a8c89a; --border: #2d4a2d;
     }
-
-    * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-
-    body {
-      font-family: 'Hind Siliguri', sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      min-height: 100vh;
-      overflow-x: hidden;
-    }
-
-    /* TOP BAR */
-    .topbar {
-      background: linear-gradient(135deg, var(--green-dark), var(--bg2));
-      padding: 12px 16px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      border-bottom: 2px solid var(--border);
-      position: sticky;
-      top: 0;
-      z-index: 100;
-    }
-
-    .farm-name {
-      font-family: 'Baloo Da 2', cursive;
-      font-size: 18px;
-      font-weight: 800;
-      color: var(--yellow);
-    }
-
-    .currencies {
-      display: flex;
-      gap: 8px;
-    }
-
-    .currency {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 20px;
-      padding: 4px 10px;
-      font-size: 13px;
-      font-weight: 600;
-      display: flex;
-      align-items: center;
-      gap: 4px;
-    }
-
-    .currency.coins { color: var(--yellow); }
-    .currency.gems { color: #a78bfa; }
-    .currency.tokens { color: var(--orange); }
-
-    /* LEVEL BAR */
-    .levelbar {
-      background: var(--bg2);
-      padding: 8px 16px;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      border-bottom: 1px solid var(--border);
-    }
-
-    .level-badge {
-      background: var(--green);
-      color: white;
-      font-family: 'Baloo Da 2', cursive;
-      font-weight: 800;
-      font-size: 14px;
-      padding: 2px 10px;
-      border-radius: 12px;
-      min-width: 50px;
-      text-align: center;
-    }
-
-    .xp-bar-wrap {
-      flex: 1;
-      background: var(--bg3);
-      border-radius: 10px;
-      height: 10px;
-      overflow: hidden;
-    }
-
-    .xp-bar {
-      height: 100%;
-      background: linear-gradient(90deg, var(--green), var(--yellow));
-      border-radius: 10px;
-      transition: width 0.5s ease;
-    }
-
-    .xp-text {
-      font-size: 11px;
-      color: var(--text2);
-      min-width: 70px;
-      text-align: right;
-    }
-
-    /* PAGES */
-    .page { display: none; padding: 16px; padding-bottom: 80px; }
-    .page.active { display: block; }
-
-    /* FARM PAGE */
-    .section-title {
-      font-family: 'Baloo Da 2', cursive;
-      font-size: 16px;
-      font-weight: 700;
-      color: var(--green-light);
-      margin-bottom: 12px;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    /* PLOTS */
-    .plots-grid {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 8px;
-      margin-bottom: 20px;
-    }
-
-    .plot {
-      background: var(--card);
-      border: 2px solid var(--border);
-      border-radius: 12px;
-      aspect-ratio: 1;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      transition: all 0.2s;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .plot:active { transform: scale(0.95); }
-
-    .plot.empty { border-style: dashed; opacity: 0.7; }
-    .plot.planted { border-color: var(--green); background: #1a3520; }
-    .plot.ready { border-color: var(--yellow); background: #2a2a10; animation: pulse 1s infinite; }
-    .plot.locked { opacity: 0.3; cursor: not-allowed; }
-
-    @keyframes pulse {
-      0%, 100% { box-shadow: 0 0 0 0 rgba(245, 200, 66, 0.4); }
-      50% { box-shadow: 0 0 0 6px rgba(245, 200, 66, 0); }
-    }
-
-    .plot-emoji { font-size: 24px; }
-    .plot-time {
-      font-size: 10px;
-      color: var(--text2);
-      margin-top: 2px;
-    }
-
-    /* CROP SELECTOR */
-    .crop-modal {
-      display: none;
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      background: var(--bg2);
-      border-top: 2px solid var(--border);
-      border-radius: 20px 20px 0 0;
-      padding: 20px 16px;
-      z-index: 200;
-      max-height: 60vh;
-      overflow-y: auto;
-    }
-
-    .crop-modal.open { display: block; }
-    .modal-overlay {
-      display: none;
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,0.6);
-      z-index: 199;
-    }
-    .modal-overlay.open { display: block; }
-
-    .modal-title {
-      font-family: 'Baloo Da 2', cursive;
-      font-size: 18px;
-      font-weight: 700;
-      margin-bottom: 16px;
-      text-align: center;
-    }
-
-    .crop-list {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 10px;
-    }
-
-    .crop-item {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 12px;
-      cursor: pointer;
-      transition: all 0.2s;
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-    }
-
-    .crop-item:active { transform: scale(0.97); background: var(--card2); }
-    .crop-item.locked { opacity: 0.4; cursor: not-allowed; }
-
-    .crop-emoji { font-size: 28px; }
-    .crop-name { font-weight: 600; font-size: 14px; }
-    .crop-info { font-size: 11px; color: var(--text2); }
-    .crop-cost { font-size: 12px; color: var(--yellow); font-weight: 600; }
-
-    /* ANIMALS */
-    .animals-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 10px;
-      margin-bottom: 20px;
-    }
-
-    .animal-card {
-      background: var(--card);
-      border: 2px solid var(--border);
-      border-radius: 14px;
-      padding: 12px 8px;
-      text-align: center;
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-
-    .animal-card:active { transform: scale(0.97); }
-    .animal-card.locked { opacity: 0.4; }
-    .animal-card.ready { border-color: var(--yellow); }
-
-    .animal-emoji { font-size: 32px; }
-    .animal-name { font-size: 12px; font-weight: 600; margin-top: 4px; }
-    .animal-level { font-size: 10px; color: var(--text2); }
-    .animal-timer { font-size: 10px; color: var(--green-light); margin-top: 2px; }
-
-    /* BOTTOM NAV */
-    .bottom-nav {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      background: var(--bg2);
-      border-top: 2px solid var(--border);
-      display: flex;
-      z-index: 100;
-    }
-
-    .nav-btn {
-      flex: 1;
-      padding: 10px 4px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 2px;
-      cursor: pointer;
-      transition: all 0.2s;
-      border: none;
-      background: transparent;
-      color: var(--text2);
-    }
-
-    .nav-btn.active { color: var(--green-light); }
-    .nav-btn:active { background: var(--card); }
-
-    .nav-icon { font-size: 22px; }
-    .nav-label { font-size: 10px; }
-
-    /* MARKET */
-    .market-tabs {
-      display: flex;
-      gap: 8px;
-      margin-bottom: 16px;
-    }
-
-    .tab-btn {
-      flex: 1;
-      padding: 8px;
-      border-radius: 10px;
-      border: 1px solid var(--border);
-      background: var(--card);
-      color: var(--text2);
-      font-family: 'Hind Siliguri', sans-serif;
-      font-size: 13px;
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-
-    .tab-btn.active {
-      background: var(--green);
-      color: white;
-      border-color: var(--green);
-    }
-
-    .market-item {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 12px;
-      margin-bottom: 10px;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-
-    .market-emoji { font-size: 32px; }
-    .market-info { flex: 1; }
-    .market-name { font-weight: 600; font-size: 15px; }
-    .market-stock { font-size: 12px; color: var(--text2); }
-    .market-price { font-size: 13px; color: var(--yellow); font-weight: 600; }
-
-    .sell-btn {
-      background: var(--green);
-      color: white;
-      border: none;
-      border-radius: 8px;
-      padding: 8px 14px;
-      font-family: 'Hind Siliguri', sans-serif;
-      font-size: 13px;
-      font-weight: 600;
-      cursor: pointer;
-    }
-
-    /* UPGRADE PAGE */
-    .upgrade-card {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      padding: 14px;
-      margin-bottom: 12px;
-    }
-
-    .upgrade-header {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      margin-bottom: 10px;
-    }
-
-    .upgrade-icon { font-size: 28px; }
-    .upgrade-title { font-family: 'Baloo Da 2', cursive; font-size: 16px; font-weight: 700; }
-    .upgrade-level { font-size: 12px; color: var(--text2); }
-
-    .upgrade-cost {
-      display: flex;
-      gap: 8px;
-      flex-wrap: wrap;
-      margin-bottom: 10px;
-    }
-
-    .cost-badge {
-      background: var(--bg3);
-      border-radius: 8px;
-      padding: 4px 8px;
-      font-size: 12px;
-      display: flex;
-      align-items: center;
-      gap: 4px;
-    }
-
-    .upgrade-btn {
-      width: 100%;
-      background: linear-gradient(135deg, var(--green), var(--green-light));
-      color: white;
-      border: none;
-      border-radius: 10px;
-      padding: 10px;
-      font-family: 'Baloo Da 2', cursive;
-      font-size: 15px;
-      font-weight: 700;
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-
-    .upgrade-btn:active { transform: scale(0.98); opacity: 0.9; }
-    .upgrade-btn:disabled { background: var(--bg3); color: var(--text2); cursor: not-allowed; }
-
-    /* PROFILE */
-    .profile-header {
-      background: linear-gradient(135deg, var(--green-dark), var(--bg3));
-      border-radius: 16px;
-      padding: 20px;
-      text-align: center;
-      margin-bottom: 16px;
-      border: 1px solid var(--border);
-    }
-
-    .profile-avatar { font-size: 60px; margin-bottom: 8px; }
-    .profile-name { font-family: 'Baloo Da 2', cursive; font-size: 22px; font-weight: 800; color: var(--yellow); }
-    .profile-farm { font-size: 14px; color: var(--text2); }
-
-    .stats-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 10px;
-      margin-bottom: 16px;
-    }
-
-    .stat-card {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 12px;
-      text-align: center;
-    }
-
-    .stat-value { font-family: 'Baloo Da 2', cursive; font-size: 22px; font-weight: 800; color: var(--green-light); }
-    .stat-label { font-size: 11px; color: var(--text2); margin-top: 2px; }
-
-    /* LEADERBOARD */
-    .leader-item {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 12px 14px;
-      margin-bottom: 8px;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-
-    .leader-rank { font-family: 'Baloo Da 2', cursive; font-size: 20px; font-weight: 800; min-width: 30px; }
-    .leader-rank.gold { color: #ffd700; }
-    .leader-rank.silver { color: #c0c0c0; }
-    .leader-rank.bronze { color: #cd7f32; }
-
-    .leader-info { flex: 1; }
-    .leader-name { font-weight: 600; font-size: 14px; }
-    .leader-farm { font-size: 11px; color: var(--text2); }
-    .leader-score { font-size: 13px; color: var(--yellow); font-weight: 600; }
-
-    /* QUEST */
-    .quest-card {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 14px;
-      margin-bottom: 10px;
-    }
-
-    .quest-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
-    .quest-title { font-weight: 600; font-size: 14px; }
-    .quest-reward { font-size: 12px; color: var(--yellow); }
-
-    .quest-progress-bar {
-      background: var(--bg3);
-      border-radius: 6px;
-      height: 8px;
-      overflow: hidden;
-      margin-bottom: 6px;
-    }
-
-    .quest-progress-fill {
-      height: 100%;
-      background: linear-gradient(90deg, var(--green), var(--yellow));
-      border-radius: 6px;
-      transition: width 0.5s;
-    }
-
-    .quest-progress-text { font-size: 11px; color: var(--text2); }
-    .quest-complete { color: var(--green-light); font-weight: 600; }
-
-    /* TOAST */
-    .toast {
-      position: fixed;
-      top: 80px;
-      left: 50%;
-      transform: translateX(-50%);
-      background: var(--green-dark);
-      color: white;
-      padding: 10px 20px;
-      border-radius: 20px;
-      font-size: 14px;
-      font-weight: 600;
-      z-index: 999;
-      display: none;
-      white-space: nowrap;
-      border: 1px solid var(--green);
-    }
-
-    .toast.show { display: block; animation: toastIn 0.3s ease; }
-
-    @keyframes toastIn {
-      from { opacity: 0; top: 60px; }
-      to { opacity: 1; top: 80px; }
-    }
-
-    /* DAILY BONUS MODAL */
-    .bonus-modal {
-      display: none;
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,0.8);
-      z-index: 300;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .bonus-modal.open { display: flex; }
-
-    .bonus-box {
-      background: var(--bg2);
-      border: 2px solid var(--yellow);
-      border-radius: 20px;
-      padding: 30px 24px;
-      text-align: center;
-      max-width: 300px;
-      width: 90%;
-    }
-
-    .bonus-icon { font-size: 60px; margin-bottom: 12px; }
-    .bonus-title { font-family: 'Baloo Da 2', cursive; font-size: 22px; font-weight: 800; color: var(--yellow); margin-bottom: 8px; }
-    .bonus-desc { font-size: 14px; color: var(--text2); margin-bottom: 16px; }
-    .bonus-rewards { display: flex; justify-content: center; gap: 16px; margin-bottom: 20px; }
-    .bonus-reward { font-size: 18px; font-weight: 700; }
-    .bonus-btn {
-      background: linear-gradient(135deg, var(--yellow), var(--orange));
-      color: var(--bg);
-      border: none;
-      border-radius: 12px;
-      padding: 12px 30px;
-      font-family: 'Baloo Da 2', cursive;
-      font-size: 16px;
-      font-weight: 800;
-      cursor: pointer;
-      width: 100%;
-    }
-
-    .loading {
-      text-align: center;
-      padding: 40px;
-      color: var(--text2);
-      font-size: 16px;
-    }
-
-    .loading-spinner {
-      font-size: 40px;
-      animation: spin 1s linear infinite;
-      display: block;
-      margin-bottom: 12px;
-    }
-
-    @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+    * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+    body { font-family:'Hind Siliguri',sans-serif; background:var(--bg); color:var(--text); min-height:100vh; overflow-x:hidden; }
+    .topbar { background:linear-gradient(135deg,var(--green-dark),var(--bg2)); padding:12px 16px; display:flex; justify-content:space-between; align-items:center; border-bottom:2px solid var(--border); position:sticky; top:0; z-index:100; }
+    .farm-name { font-family:'Baloo Da 2',cursive; font-size:18px; font-weight:800; color:var(--yellow); }
+    .currencies { display:flex; gap:8px; }
+    .currency { background:var(--card); border:1px solid var(--border); border-radius:20px; padding:4px 10px; font-size:13px; font-weight:600; display:flex; align-items:center; gap:4px; }
+    .currency.coins { color:var(--yellow); }
+    .currency.gems { color:#a78bfa; }
+    .currency.tokens { color:var(--orange); }
+    .levelbar { background:var(--bg2); padding:8px 16px; display:flex; align-items:center; gap:10px; border-bottom:1px solid var(--border); }
+    .level-badge { background:var(--green); color:white; font-family:'Baloo Da 2',cursive; font-weight:800; font-size:14px; padding:2px 10px; border-radius:12px; min-width:50px; text-align:center; }
+    .xp-bar-wrap { flex:1; background:var(--bg3); border-radius:10px; height:10px; overflow:hidden; }
+    .xp-bar { height:100%; background:linear-gradient(90deg,var(--green),var(--yellow)); border-radius:10px; transition:width 0.5s; }
+    .xp-text { font-size:11px; color:var(--text2); min-width:70px; text-align:right; }
+    .page { display:none; padding:16px; padding-bottom:80px; }
+    .page.active { display:block; }
+    .section-title { font-family:'Baloo Da 2',cursive; font-size:16px; font-weight:700; color:var(--green-light); margin-bottom:12px; }
+    .plots-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:8px; margin-bottom:20px; }
+    .plot { background:var(--card); border:2px solid var(--border); border-radius:12px; aspect-ratio:1; display:flex; flex-direction:column; align-items:center; justify-content:center; cursor:pointer; transition:all 0.2s; }
+    .plot:active { transform:scale(0.95); }
+    .plot.empty { border-style:dashed; opacity:0.7; }
+    .plot.planted { border-color:var(--green); background:#1a3520; }
+    .plot.ready { border-color:var(--yellow); background:#2a2a10; animation:pulse 1s infinite; }
+    .plot.locked { opacity:0.3; cursor:not-allowed; }
+    @keyframes pulse { 0%,100%{box-shadow:0 0 0 0 rgba(245,200,66,0.4)} 50%{box-shadow:0 0 0 6px rgba(245,200,66,0)} }
+    .plot-emoji { font-size:24px; }
+    .plot-time { font-size:10px; color:var(--text2); margin-top:2px; }
+    .crop-modal { display:none; position:fixed; bottom:0; left:0; right:0; background:var(--bg2); border-top:2px solid var(--border); border-radius:20px 20px 0 0; padding:20px 16px; z-index:200; max-height:60vh; overflow-y:auto; }
+    .crop-modal.open { display:block; }
+    .modal-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.6); z-index:199; }
+    .modal-overlay.open { display:block; }
+    .modal-title { font-family:'Baloo Da 2',cursive; font-size:18px; font-weight:700; margin-bottom:16px; text-align:center; }
+    .crop-list { display:grid; grid-template-columns:repeat(2,1fr); gap:10px; }
+    .crop-item { background:var(--card); border:1px solid var(--border); border-radius:12px; padding:12px; cursor:pointer; transition:all 0.2s; display:flex; flex-direction:column; gap:4px; }
+    .crop-item:active { transform:scale(0.97); }
+    .crop-item.locked { opacity:0.4; cursor:not-allowed; }
+    .crop-emoji { font-size:28px; }
+    .crop-name { font-weight:600; font-size:14px; }
+    .crop-info { font-size:11px; color:var(--text2); }
+    .crop-cost { font-size:12px; font-weight:600; }
+    .animals-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin-bottom:20px; }
+    .animal-card { background:var(--card); border:2px solid var(--border); border-radius:14px; padding:12px 8px; text-align:center; cursor:pointer; transition:all 0.2s; }
+    .animal-card:active { transform:scale(0.97); }
+    .animal-card.locked { opacity:0.4; }
+    .animal-card.ready { border-color:var(--yellow); }
+    .animal-emoji { font-size:32px; }
+    .animal-name { font-size:12px; font-weight:600; margin-top:4px; }
+    .animal-level { font-size:10px; color:var(--text2); }
+    .animal-timer { font-size:10px; color:var(--green-light); margin-top:2px; }
+    .bottom-nav { position:fixed; bottom:0; left:0; right:0; background:var(--bg2); border-top:2px solid var(--border); display:flex; z-index:100; }
+    .nav-btn { flex:1; padding:10px 4px; display:flex; flex-direction:column; align-items:center; gap:2px; cursor:pointer; transition:all 0.2s; border:none; background:transparent; color:var(--text2); }
+    .nav-btn.active { color:var(--green-light); }
+    .nav-btn:active { background:var(--card); }
+    .nav-icon { font-size:22px; }
+    .nav-label { font-size:10px; }
+    .market-tabs { display:flex; gap:8px; margin-bottom:16px; }
+    .tab-btn { flex:1; padding:8px; border-radius:10px; border:1px solid var(--border); background:var(--card); color:var(--text2); font-family:'Hind Siliguri',sans-serif; font-size:13px; cursor:pointer; }
+    .tab-btn.active { background:var(--green); color:white; border-color:var(--green); }
+    .market-item { background:var(--card); border:1px solid var(--border); border-radius:12px; padding:12px; margin-bottom:10px; display:flex; align-items:center; gap:12px; }
+    .market-emoji { font-size:32px; }
+    .market-info { flex:1; }
+    .market-name { font-weight:600; font-size:15px; }
+    .market-stock { font-size:12px; color:var(--text2); }
+    .market-price { font-size:13px; color:var(--yellow); font-weight:600; }
+    .sell-btn { background:var(--green); color:white; border:none; border-radius:8px; padding:8px 14px; font-family:'Hind Siliguri',sans-serif; font-size:13px; font-weight:600; cursor:pointer; }
+    .upgrade-card { background:var(--card); border:1px solid var(--border); border-radius:14px; padding:14px; margin-bottom:12px; }
+    .upgrade-header { display:flex; align-items:center; gap:10px; margin-bottom:10px; }
+    .upgrade-icon { font-size:28px; }
+    .upgrade-title { font-family:'Baloo Da 2',cursive; font-size:16px; font-weight:700; }
+    .upgrade-level { font-size:12px; color:var(--text2); }
+    .upgrade-cost { display:flex; gap:8px; flex-wrap:wrap; margin-bottom:10px; }
+    .cost-badge { background:var(--bg3); border-radius:8px; padding:4px 8px; font-size:12px; }
+    .upgrade-btn { width:100%; background:linear-gradient(135deg,var(--green),var(--green-light)); color:white; border:none; border-radius:10px; padding:10px; font-family:'Baloo Da 2',cursive; font-size:15px; font-weight:700; cursor:pointer; }
+    .upgrade-btn:disabled { background:var(--bg3); color:var(--text2); cursor:not-allowed; }
+    .profile-header { background:linear-gradient(135deg,var(--green-dark),var(--bg3)); border-radius:16px; padding:20px; text-align:center; margin-bottom:16px; border:1px solid var(--border); }
+    .profile-avatar { font-size:60px; margin-bottom:8px; }
+    .profile-name { font-family:'Baloo Da 2',cursive; font-size:22px; font-weight:800; color:var(--yellow); }
+    .profile-farm { font-size:14px; color:var(--text2); }
+    .stats-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:10px; margin-bottom:16px; }
+    .stat-card { background:var(--card); border:1px solid var(--border); border-radius:12px; padding:12px; text-align:center; }
+    .stat-value { font-family:'Baloo Da 2',cursive; font-size:22px; font-weight:800; color:var(--green-light); }
+    .stat-label { font-size:11px; color:var(--text2); margin-top:2px; }
+    .leader-item { background:var(--card); border:1px solid var(--border); border-radius:12px; padding:12px 14px; margin-bottom:8px; display:flex; align-items:center; gap:12px; }
+    .leader-rank { font-family:'Baloo Da 2',cursive; font-size:20px; font-weight:800; min-width:30px; }
+    .leader-rank.gold { color:#ffd700; }
+    .leader-rank.silver { color:#c0c0c0; }
+    .leader-rank.bronze { color:#cd7f32; }
+    .leader-info { flex:1; }
+    .leader-name { font-weight:600; font-size:14px; }
+    .leader-farm { font-size:11px; color:var(--text2); }
+    .leader-score { font-size:13px; color:var(--yellow); font-weight:600; }
+    .quest-card { background:var(--card); border:1px solid var(--border); border-radius:12px; padding:14px; margin-bottom:10px; }
+    .quest-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; }
+    .quest-title { font-weight:600; font-size:14px; }
+    .quest-reward { font-size:12px; color:var(--yellow); }
+    .quest-progress-bar { background:var(--bg3); border-radius:6px; height:8px; overflow:hidden; margin-bottom:6px; }
+    .quest-progress-fill { height:100%; background:linear-gradient(90deg,var(--green),var(--yellow)); border-radius:6px; transition:width 0.5s; }
+    .quest-progress-text { font-size:11px; color:var(--text2); }
+    .quest-complete { color:var(--green-light); font-weight:600; }
+    .toast { position:fixed; top:80px; left:50%; transform:translateX(-50%); background:var(--green-dark); color:white; padding:10px 20px; border-radius:20px; font-size:14px; font-weight:600; z-index:999; display:none; white-space:nowrap; border:1px solid var(--green); }
+    .toast.show { display:block; animation:toastIn 0.3s ease; }
+    @keyframes toastIn { from{opacity:0;top:60px} to{opacity:1;top:80px} }
+    .bonus-modal { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.8); z-index:300; align-items:center; justify-content:center; }
+    .bonus-modal.open { display:flex; }
+    .bonus-box { background:var(--bg2); border:2px solid var(--yellow); border-radius:20px; padding:30px 24px; text-align:center; max-width:300px; width:90%; }
+    .bonus-icon { font-size:60px; margin-bottom:12px; }
+    .bonus-title { font-family:'Baloo Da 2',cursive; font-size:22px; font-weight:800; color:var(--yellow); margin-bottom:8px; }
+    .bonus-desc { font-size:14px; color:var(--text2); margin-bottom:16px; }
+    .bonus-rewards { display:flex; justify-content:center; gap:16px; margin-bottom:20px; }
+    .bonus-reward { font-size:18px; font-weight:700; }
+    .bonus-btn { background:linear-gradient(135deg,var(--yellow),var(--orange)); color:var(--bg); border:none; border-radius:12px; padding:12px 30px; font-family:'Baloo Da 2',cursive; font-size:16px; font-weight:800; cursor:pointer; width:100%; }
+    .loading { text-align:center; padding:40px; color:var(--text2); font-size:16px; }
+    .loading-spinner { font-size:40px; animation:spin 1s linear infinite; display:block; margin-bottom:12px; }
+    @keyframes spin { from{transform:rotate(0deg)} to{transform:rotate(360deg)} }
+    .error-box { background:#2a1010; border:1px solid #e74c3c; border-radius:12px; padding:16px; margin:16px; text-align:center; }
+    .error-box button { background:var(--green); color:white; border:none; border-radius:8px; padding:8px 16px; margin-top:10px; cursor:pointer; font-size:14px; }
   </style>
 </head>
 <body>
 
-<!-- TOAST -->
 <div class="toast" id="toast"></div>
 
-<!-- DAILY BONUS MODAL -->
 <div class="bonus-modal" id="bonusModal">
   <div class="bonus-box">
-    <div class="bonus-icon">🎁</div>
-    <div class="bonus-title">ডেইলি বোনাস!</div>
-    <div class="bonus-desc" id="bonusDesc">আজকে লগইন করেছেন!</div>
+    <div class="bonus-icon">ЁЯОБ</div>
+    <div class="bonus-title">ржбрзЗржЗрж▓рж┐ ржмрзЛржирж╛рж╕!</div>
+    <div class="bonus-desc" id="bonusDesc">ржЖржЬржХрзЗ рж▓ржЧржЗржи ржХрж░рзЗржЫрзЗржи!</div>
     <div class="bonus-rewards" id="bonusRewards"></div>
-    <button class="bonus-btn" onclick="closeBonusModal()">দারুণ! ধন্যবাদ 🎉</button>
+    <button class="bonus-btn" onclick="closeBonusModal()">ржжрж╛рж░рзБржг! ржзржирзНржпржмрж╛ржж ЁЯОЙ</button>
   </div>
 </div>
 
-<!-- CROP MODAL -->
 <div class="modal-overlay" id="modalOverlay" onclick="closeCropModal()"></div>
 <div class="crop-modal" id="cropModal">
-  <div class="modal-title">🌱 কোন ফসল লাগাবেন?</div>
+  <div class="modal-title">ЁЯМ▒ ржХрзЛржи ржлрж╕рж▓ рж▓рж╛ржЧрж╛ржмрзЗржи?</div>
   <div class="crop-list" id="cropList"></div>
 </div>
 
-<!-- TOP BAR -->
 <div class="topbar">
-  <div class="farm-name" id="farmName">🌾 আমার ফার্ম</div>
+  <div class="farm-name" id="farmName">ЁЯМ╛ ржЖржорж╛рж░ ржлрж╛рж░рзНржо</div>
   <div class="currencies">
-    <div class="currency coins">🪙 <span id="coins">0</span></div>
-    <div class="currency gems">💎 <span id="gems">0</span></div>
-    <div class="currency tokens">🔮 <span id="tokens">0</span></div>
+    <div class="currency coins">ЁЯкЩ <span id="coins">0</span></div>
+    <div class="currency gems">ЁЯТО <span id="gems">0</span></div>
+    <div class="currency tokens">ЁЯФо <span id="tokens">0</span></div>
   </div>
 </div>
 
-<!-- LEVEL BAR -->
 <div class="levelbar">
   <div class="level-badge">Lv.<span id="level">1</span></div>
-  <div class="xp-bar-wrap">
-    <div class="xp-bar" id="xpBar" style="width: 0%"></div>
-  </div>
+  <div class="xp-bar-wrap"><div class="xp-bar" id="xpBar" style="width:0%"></div></div>
   <div class="xp-text"><span id="xpCurrent">0</span>/<span id="xpNeeded">100</span> XP</div>
 </div>
 
-<!-- PAGES -->
-
-<!-- FARM PAGE -->
 <div class="page active" id="page-farm">
   <div class="loading" id="farmLoading">
-    <span class="loading-spinner">🌱</span>
-    লোড হচ্ছে...
+    <span class="loading-spinner">ЁЯМ▒</span>
+    рж▓рзЛржб рж╣ржЪрзНржЫрзЗ...
   </div>
   <div id="farmContent" style="display:none">
-    <div class="section-title">🌾 আমার জমি</div>
+    <div class="section-title">ЁЯМ╛ ржЖржорж╛рж░ ржЬржорж┐</div>
     <div class="plots-grid" id="plotsGrid"></div>
-    <div class="section-title">🐾 পশুপালন</div>
+    <div class="section-title">ЁЯР╛ ржкрж╢рзБржкрж╛рж▓ржи</div>
     <div class="animals-grid" id="animalsGrid"></div>
   </div>
+  <div id="farmError" style="display:none">
+    <div class="error-box">
+      <div style="font-size:40px">тЭМ</div>
+      <div style="margin-top:8px">рж╕рж╛рж░рзНржнрж╛рж░ рж╕ржВржпрзЛржЧ рж╕ржорж╕рзНржпрж╛!</div>
+      <button onclick="initGame()">ржЖржмрж╛рж░ ржЪрзЗрж╖рзНржЯрж╛ ржХрж░рзБржи</button>
+    </div>
+  </div>
 </div>
 
-<!-- MARKET PAGE -->
 <div class="page" id="page-market">
   <div class="market-tabs">
-    <button class="tab-btn active" onclick="switchMarketTab('sell')">বিক্রি করুন</button>
-    <button class="tab-btn" onclick="switchMarketTab('buy')">কিনুন</button>
+    <button class="tab-btn active" onclick="switchMarketTab('sell', this)">ржмрж┐ржХрзНрж░рж┐ ржХрж░рзБржи</button>
+    <button class="tab-btn" onclick="switchMarketTab('buy', this)">ржмрзАржЬ ржжрзЗржЦрзБржи</button>
   </div>
-  <div id="marketSell">
-    <div id="warehouseItems"></div>
-  </div>
-  <div id="marketBuy" style="display:none">
-    <div id="seedShop"></div>
-  </div>
+  <div id="marketSell"><div id="warehouseItems"></div></div>
+  <div id="marketBuy" style="display:none"><div id="seedShop"></div></div>
 </div>
 
-<!-- UPGRADE PAGE -->
 <div class="page" id="page-upgrade">
-  <div class="section-title">⬆️ আপগ্রেড</div>
+  <div class="section-title">тмЖя╕П ржЖржкржЧрзНрж░рзЗржб</div>
   <div id="upgradeContent"></div>
 </div>
 
-<!-- QUEST PAGE -->
 <div class="page" id="page-quest">
-  <div class="section-title">📋 কোয়েস্ট</div>
-  <div id="questContent">
-    <div class="loading">লোড হচ্ছে...</div>
-  </div>
+  <div class="section-title">ЁЯУЛ ржХрзЛржпрж╝рзЗрж╕рзНржЯ</div>
+  <div id="questContent"><div class="loading">рж▓рзЛржб рж╣ржЪрзНржЫрзЗ...</div></div>
 </div>
 
-<!-- PROFILE PAGE -->
 <div class="page" id="page-profile">
   <div class="profile-header">
-    <div class="profile-avatar">👨‍🌾</div>
-    <div class="profile-name" id="profileName">কৃষক</div>
-    <div class="profile-farm" id="profileFarm">আমার ফার্ম</div>
+    <div class="profile-avatar">ЁЯСитАНЁЯМ╛</div>
+    <div class="profile-name" id="profileName">ржХрзГрж╖ржХ</div>
+    <div class="profile-farm" id="profileFarm">ржЖржорж╛рж░ ржлрж╛рж░рзНржо</div>
   </div>
   <div class="stats-grid">
-    <div class="stat-card">
-      <div class="stat-value" id="statHarvested">0</div>
-      <div class="stat-label">মোট ফসল</div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-value" id="statEarned">0</div>
-      <div class="stat-label">মোট আয়</div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-value" id="statStreak">0</div>
-      <div class="stat-label">লগইন স্ট্রিক</div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-value" id="statQuests">0</div>
-      <div class="stat-label">কোয়েস্ট</div>
-    </div>
+    <div class="stat-card"><div class="stat-value" id="statHarvested">0</div><div class="stat-label">ржорзЛржЯ ржлрж╕рж▓</div></div>
+    <div class="stat-card"><div class="stat-value" id="statEarned">0</div><div class="stat-label">ржорзЛржЯ ржЖржпрж╝</div></div>
+    <div class="stat-card"><div class="stat-value" id="statStreak">0</div><div class="stat-label">рж▓ржЧржЗржи рж╕рзНржЯрзНрж░рж┐ржХ</div></div>
+    <div class="stat-card"><div class="stat-value" id="statQuests">0</div><div class="stat-label">ржХрзЛржпрж╝рзЗрж╕рзНржЯ</div></div>
   </div>
-  <div class="section-title">🏆 লিডারবোর্ড</div>
+  <div class="section-title">ЁЯПЖ рж▓рж┐ржбрж╛рж░ржмрзЛрж░рзНржб</div>
   <div id="leaderboard"></div>
 </div>
 
-<!-- BOTTOM NAV -->
 <nav class="bottom-nav">
-  <button class="nav-btn active" onclick="showPage('farm', this)">
-    <span class="nav-icon">🌾</span>
-    <span class="nav-label">ফার্ম</span>
-  </button>
-  <button class="nav-btn" onclick="showPage('market', this)">
-    <span class="nav-icon">🏪</span>
-    <span class="nav-label">মার্কেট</span>
-  </button>
-  <button class="nav-btn" onclick="showPage('upgrade', this)">
-    <span class="nav-icon">⬆️</span>
-    <span class="nav-label">আপগ্রেড</span>
-  </button>
-  <button class="nav-btn" onclick="showPage('quest', this)">
-    <span class="nav-icon">📋</span>
-    <span class="nav-label">কোয়েস্ট</span>
-  </button>
-  <button class="nav-btn" onclick="showPage('profile', this)">
-    <span class="nav-icon">👤</span>
-    <span class="nav-label">প্রোফাইল</span>
-  </button>
+  <button class="nav-btn active" onclick="showPage('farm',this)"><span class="nav-icon">ЁЯМ╛</span><span class="nav-label">ржлрж╛рж░рзНржо</span></button>
+  <button class="nav-btn" onclick="showPage('market',this)"><span class="nav-icon">ЁЯПк</span><span class="nav-label">ржорж╛рж░рзНржХрзЗржЯ</span></button>
+  <button class="nav-btn" onclick="showPage('upgrade',this)"><span class="nav-icon">тмЖя╕П</span><span class="nav-label">ржЖржкржЧрзНрж░рзЗржб</span></button>
+  <button class="nav-btn" onclick="showPage('quest',this)"><span class="nav-icon">ЁЯУЛ</span><span class="nav-label">ржХрзЛржпрж╝рзЗрж╕рзНржЯ</span></button>
+  <button class="nav-btn" onclick="showPage('profile',this)"><span class="nav-icon">ЁЯСд</span><span class="nav-label">ржкрзНрж░рзЛржлрж╛ржЗрж▓</span></button>
 </nav>
 
 <script>
-// =====================
-// CONFIG
-// =====================
 const API = 'https://farming-game-backend-production.up.railway.app';
 
 const CROPS = {
-  wheat:      { name: 'গম',        emoji: '🌾', growTime: 5*60,    seedCost: 10,   sellPrice: 25,   xp: 5,  unlockLevel: 1  },
-  corn:       { name: 'ভুট্টা',    emoji: '🌽', growTime: 15*60,   seedCost: 30,   sellPrice: 80,   xp: 10, unlockLevel: 1  },
-  tomato:     { name: 'টমেটো',     emoji: '🍅', growTime: 30*60,   seedCost: 60,   sellPrice: 180,  xp: 20, unlockLevel: 10 },
-  strawberry: { name: 'স্ট্রবেরি', emoji: '🍓', growTime: 60*60,   seedCost: 120,  sellPrice: 400,  xp: 35, unlockLevel: 10 },
-  sunflower:  { name: 'সূর্যমুখী', emoji: '🌻', growTime: 4*3600,  seedCost: 500,  sellPrice: 2000, xp: 80, unlockLevel: 30 },
-  grape:      { name: 'আঙুর',      emoji: '🍇', growTime: 12*3600, seedCost: 2000, sellPrice: 10000,xp: 200,unlockLevel: 30 }
+  wheat:      { name:'ржЧржо',        emoji:'ЁЯМ╛', growTime:5*60,    seedCost:10,   sellPrice:25,    xp:5,   unlockLevel:1  },
+  corn:       { name:'ржнрзБржЯрзНржЯрж╛',    emoji:'ЁЯМ╜', growTime:15*60,   seedCost:30,   sellPrice:80,    xp:10,  unlockLevel:1  },
+  tomato:     { name:'ржЯржорзЗржЯрзЛ',     emoji:'ЁЯНЕ', growTime:30*60,   seedCost:60,   sellPrice:180,   xp:20,  unlockLevel:10 },
+  strawberry: { name:'рж╕рзНржЯрзНрж░ржмрзЗрж░рж┐', emoji:'ЁЯНУ', growTime:60*60,   seedCost:120,  sellPrice:400,   xp:35,  unlockLevel:10 },
+  sunflower:  { name:'рж╕рзВрж░рзНржпржорзБржЦрзА', emoji:'ЁЯМ╗', growTime:4*3600,  seedCost:500,  sellPrice:2000,  xp:80,  unlockLevel:30 },
+  grape:      { name:'ржЖржЩрзБрж░',      emoji:'ЁЯНЗ', growTime:12*3600, seedCost:2000, sellPrice:10000, xp:200, unlockLevel:30 }
 };
 
 const ANIMALS = {
-  chicken: { name: 'মুরগি', emoji: '🐔', unlockLevel: 5,  shed: 'chickenCoop', item: 'egg',     itemName: 'ডিম',       interval: 3600  },
-  duck:    { name: 'হাঁস',  emoji: '🦆', unlockLevel: 15, shed: 'duckPond',   item: 'duck_egg',itemName: 'হাঁসের ডিম', interval: 5400  },
-  cow:     { name: 'গরু',   emoji: '🐄', unlockLevel: 25, shed: 'cowShed',    item: 'milk',    itemName: 'দুধ',       interval: 7200  }
+  chicken: { name:'ржорзБрж░ржЧрж┐', emoji:'ЁЯРФ', unlockLevel:5,  shed:'chickenCoop', item:'egg',     interval:3600  },
+  duck:    { name:'рж╣рж╛ржБрж╕',  emoji:'ЁЯжЖ', unlockLevel:15, shed:'duckPond',    item:'duck_egg',interval:5400  },
+  cow:     { name:'ржЧрж░рзБ',   emoji:'ЁЯРД', unlockLevel:25, shed:'cowShed',     item:'milk',    interval:7200  }
 };
 
-const ITEM_PRICES = {
-  wheat: 25, corn: 80, tomato: 180, strawberry: 400, sunflower: 2000, grape: 10000,
-  egg: 50, duck_egg: 80, milk: 120, butter: 300, cheese: 600, egg_package: 200, feather: 100, pillow: 1500
-};
+const ITEM_PRICES = { wheat:25, corn:80, tomato:180, strawberry:400, sunflower:2000, grape:10000, egg:50, duck_egg:80, milk:120, butter:300, cheese:600, feather:100 };
+const ITEM_NAMES  = { wheat:'ржЧржо', corn:'ржнрзБржЯрзНржЯрж╛', tomato:'ржЯржорзЗржЯрзЛ', strawberry:'рж╕рзНржЯрзНрж░ржмрзЗрж░рж┐', sunflower:'рж╕рзВрж░рзНржпржорзБржЦрзА', grape:'ржЖржЩрзБрж░', egg:'ржбрж┐ржо', duck_egg:'рж╣рж╛ржБрж╕рзЗрж░ ржбрж┐ржо', milk:'ржжрзБржз', butter:'ржорж╛ржЦржи', cheese:'ржкржирж┐рж░', feather:'ржкрж╛рж▓ржХ' };
 
-const ITEM_NAMES = {
-  wheat: 'গম', corn: 'ভুট্টা', tomato: 'টমেটো', strawberry: 'স্ট্রবেরি',
-  sunflower: 'সূর্যমুখী', grape: 'আঙুর', egg: 'ডিম', duck_egg: 'হাঁসের ডিম',
-  milk: 'দুধ', butter: 'মাখন', cheese: 'পনির', egg_package: 'ডিমের প্যাকেট', feather: 'পালক', pillow: 'বালিশ'
-};
+let state = { user:null, farm:null, telegramId:null, selectedPlot:null, timers:{} };
 
 // =====================
-// STATE
+// TELEGRAM USER ID ржирзЗржУржпрж╝рж╛
 // =====================
-let state = {
-  user: null,
-  farm: null,
-  telegramId: null,
-  selectedPlot: null,
-  timers: {}
-};
+function getTelegramId() {
+  try {
+    const tg = window.Telegram?.WebApp;
+    if (tg) {
+      tg.ready();
+      tg.expand();
+    }
+    // ржмрж┐ржнрж┐ржирзНржиржнрж╛ржмрзЗ user id ржирзЗржУржпрж╝рж╛рж░ ржЪрзЗрж╖рзНржЯрж╛
+    const uid =
+      tg?.initDataUnsafe?.user?.id ||
+      tg?.WebAppUser?.id ||
+      null;
 
-// =====================
-// INIT
-// =====================
-window.addEventListener('load', async () => {
-  const tg = window.Telegram?.WebApp;
-  if (tg) {
-    tg.ready();
-    tg.expand();
+    if (uid) return { id: uid.toString(), username: tg?.initDataUnsafe?.user?.username || '', firstName: tg?.initDataUnsafe?.user?.first_name || 'ржХрзГрж╖ржХ' };
+
+    // Telegram ржирж╛ рж╣рж▓рзЗ URL ржерзЗржХрзЗ ржирзЗржУржпрж╝рж╛рж░ ржЪрзЗрж╖рзНржЯрж╛
+    const params = new URLSearchParams(window.location.search);
+    const urlId = params.get('user_id');
+    if (urlId) return { id: urlId, username: '', firstName: 'ржХрзГрж╖ржХ' };
+
+    // Test mode - random id ржжрж┐ржпрж╝рзЗ ржЦрзЗрж▓рж╛ ржпрж╛ржмрзЗ
+    let storedId = localStorage.getItem('farm_user_id');
+    if (!storedId) {
+      storedId = 'user_' + Math.random().toString(36).substr(2, 9);
+      localStorage.setItem('farm_user_id', storedId);
+    }
+    return { id: storedId, username: '', firstName: 'ржХрзГрж╖ржХ' };
+  } catch(e) {
+    let storedId = localStorage.getItem('farm_user_id');
+    if (!storedId) {
+      storedId = 'user_' + Math.random().toString(36).substr(2, 9);
+      localStorage.setItem('farm_user_id', storedId);
+    }
+    return { id: storedId, username: '', firstName: 'ржХрзГрж╖ржХ' };
   }
+}
 
-  const user = tg?.initDataUnsafe?.user;
-  state.telegramId = user?.id?.toString() || 'test_user_123';
-  const username = user?.username || 'কৃষক';
-  const firstName = user?.first_name || 'কৃষক';
+async function initGame() {
+  document.getElementById('farmLoading').style.display = 'block';
+  document.getElementById('farmContent').style.display = 'none';
+  document.getElementById('farmError').style.display = 'none';
+
+  const userInfo = getTelegramId();
+  state.telegramId = userInfo.id;
 
   try {
     const res = await fetch(`${API}/api/user/login`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ telegramId: state.telegramId, username, firstName })
+      body: JSON.stringify({ telegramId: state.telegramId, username: userInfo.username, firstName: userInfo.firstName })
     });
+
+    if (!res.ok) throw new Error('Server error');
     const data = await res.json();
+
     if (data.success) {
       state.user = data.user;
       updateUI();
-      if (data.dailyBonus) showDailyBonus(data.dailyBonus);
+      if (data.dailyBonus && (data.dailyBonus.coins > 0 || data.dailyBonus.gems > 0)) {
+        showDailyBonus(data.dailyBonus);
+      }
       await loadFarm();
       await loadQuests();
       await loadLeaderboard();
       renderUpgrades();
     }
   } catch(e) {
-    showToast('সার্ভার সংযোগ সমস্যা! ❌');
+    document.getElementById('farmLoading').style.display = 'none';
+    document.getElementById('farmError').style.display = 'block';
+    showToast('рж╕рж╛рж░рзНржнрж╛рж░ рж╕ржВржпрзЛржЧ рж╕ржорж╕рзНржпрж╛! тЭМ');
   }
-});
+}
 
-// =====================
-// UI UPDATE
-// =====================
+window.addEventListener('load', initGame);
+
 function updateUI() {
   const u = state.user;
   if (!u) return;
@@ -803,29 +338,27 @@ function updateUI() {
   document.getElementById('gems').textContent = u.gems;
   document.getElementById('tokens').textContent = u.tokens;
   document.getElementById('level').textContent = u.level;
-  document.getElementById('farmName').textContent = '🌾 ' + u.farmName;
-  document.getElementById('profileName').textContent = u.firstName || u.username || 'কৃষক';
+  document.getElementById('farmName').textContent = 'ЁЯМ╛ ' + u.farmName;
+  document.getElementById('profileName').textContent = u.firstName || u.username || 'ржХрзГрж╖ржХ';
   document.getElementById('profileFarm').textContent = u.farmName;
   document.getElementById('statHarvested').textContent = formatNum(u.totalHarvested);
   document.getElementById('statEarned').textContent = formatNum(u.totalEarned);
-  document.getElementById('statStreak').textContent = u.loginStreak + ' দিন';
-  document.getElementById('statQuests').textContent = u.questsCompleted;
-
-  const xpPct = Math.min(100, (u.xp / (u.level * 150)) * 100);
+  document.getElementById('statStreak').textContent = (u.loginStreak || 0) + ' ржжрж┐ржи';
+  document.getElementById('statQuests').textContent = u.questsCompleted || 0;
+  const xpNeeded = u.level * 150;
+  const xpPct = Math.min(100, (u.xp / xpNeeded) * 100);
   document.getElementById('xpBar').style.width = xpPct + '%';
   document.getElementById('xpCurrent').textContent = u.xp;
-  document.getElementById('xpNeeded').textContent = u.level * 150;
+  document.getElementById('xpNeeded').textContent = xpNeeded;
 }
 
 function formatNum(n) {
+  if (!n) return '0';
   if (n >= 1000000) return (n/1000000).toFixed(1) + 'M';
   if (n >= 1000) return (n/1000).toFixed(1) + 'K';
   return n;
 }
 
-// =====================
-// FARM
-// =====================
 async function loadFarm() {
   try {
     const res = await fetch(`${API}/api/farm/${state.telegramId}`);
@@ -838,35 +371,36 @@ async function loadFarm() {
       renderAnimals();
       renderMarket();
     }
-  } catch(e) {}
+  } catch(e) {
+    document.getElementById('farmLoading').style.display = 'none';
+    document.getElementById('farmError').style.display = 'block';
+  }
 }
 
 function renderPlots() {
   const grid = document.getElementById('plotsGrid');
   if (!state.farm) return;
   grid.innerHTML = '';
-
   for (let i = 0; i < 20; i++) {
     const plot = state.farm.plots.find(p => p.id === i);
     const div = document.createElement('div');
-
     if (!plot) {
       div.className = 'plot locked';
-      div.innerHTML = '<span class="plot-emoji">🔒</span>';
+      div.innerHTML = '<span class="plot-emoji">ЁЯФТ</span>';
     } else if (plot.status === 'empty') {
       div.className = 'plot empty';
-      div.innerHTML = '<span class="plot-emoji">🟫</span><span class="plot-time">খালি</span>';
+      div.innerHTML = '<span class="plot-emoji">ЁЯЯл</span><span class="plot-time">ржЦрж╛рж▓рж┐</span>';
       div.onclick = () => openCropModal(i);
     } else if (plot.status === 'planted') {
       const crop = CROPS[plot.cropId];
       const remaining = Math.max(0, new Date(plot.readyAt) - new Date());
       div.className = 'plot planted';
-      div.innerHTML = `<span class="plot-emoji">${crop?.emoji || '🌱'}</span><span class="plot-time" id="timer_${i}">${formatTime(remaining/1000)}</span>`;
+      div.innerHTML = `<span class="plot-emoji">${crop?.emoji||'ЁЯМ▒'}</span><span class="plot-time" id="timer_${i}">${formatTime(remaining/1000)}</span>`;
       startTimer(i, plot.readyAt);
     } else if (plot.status === 'ready') {
       const crop = CROPS[plot.cropId];
       div.className = 'plot ready';
-      div.innerHTML = `<span class="plot-emoji">${crop?.emoji || '🌾'}</span><span class="plot-time">তৈরি!</span>`;
+      div.innerHTML = `<span class="plot-emoji">${crop?.emoji||'ЁЯМ╛'}</span><span class="plot-time">рждрзИрж░рж┐!</span>`;
       div.onclick = () => harvest(i);
     }
     grid.appendChild(div);
@@ -879,24 +413,18 @@ function startTimer(plotId, readyAt) {
     const remaining = Math.max(0, new Date(readyAt) - new Date());
     const el = document.getElementById(`timer_${plotId}`);
     if (el) {
-      if (remaining <= 0) {
-        clearInterval(state.timers[plotId]);
-        loadFarm();
-      } else {
-        el.textContent = formatTime(remaining / 1000);
-      }
+      if (remaining <= 0) { clearInterval(state.timers[plotId]); loadFarm(); }
+      else el.textContent = formatTime(remaining/1000);
     }
   }, 1000);
 }
 
-function formatTime(seconds) {
-  if (seconds <= 0) return 'তৈরি!';
-  const h = Math.floor(seconds / 3600);
-  const m = Math.floor((seconds % 3600) / 60);
-  const s = Math.floor(seconds % 60);
-  if (h > 0) return `${h}ঘ ${m}মি`;
-  if (m > 0) return `${m}মি ${s}সে`;
-  return `${s}সে`;
+function formatTime(s) {
+  if (s <= 0) return 'рждрзИрж░рж┐!';
+  const h = Math.floor(s/3600), m = Math.floor((s%3600)/60), sec = Math.floor(s%60);
+  if (h > 0) return `${h}ржШ ${m}ржорж┐`;
+  if (m > 0) return `${m}ржорж┐ ${sec}рж╕рзЗ`;
+  return `${sec}рж╕рзЗ`;
 }
 
 function openCropModal(plotId) {
@@ -908,13 +436,7 @@ function openCropModal(plotId) {
     const canAfford = state.user.coins >= crop.seedCost;
     const div = document.createElement('div');
     div.className = 'crop-item' + (locked ? ' locked' : '');
-    div.innerHTML = `
-      <span class="crop-emoji">${crop.emoji}</span>
-      <span class="crop-name">${crop.name}</span>
-      <span class="crop-info">⏱ ${formatTime(crop.growTime)}</span>
-      <span class="crop-cost" style="color:${canAfford?'#f5c842':'#e74c3c'}">🪙 ${crop.seedCost}</span>
-      ${locked ? `<span class="crop-info">🔒 লেভেল ${crop.unlockLevel}</span>` : ''}
-    `;
+    div.innerHTML = `<span class="crop-emoji">${crop.emoji}</span><span class="crop-name">${crop.name}</span><span class="crop-info">тП▒ ${formatTime(crop.growTime)}</span><span class="crop-cost" style="color:${canAfford?'#f5c842':'#e74c3c'}">ЁЯкЩ ${crop.seedCost}</span>${locked?`<span class="crop-info">ЁЯФТ Lv.${crop.unlockLevel}</span>`:''}`;
     if (!locked) div.onclick = () => plant(plotId, id);
     list.appendChild(div);
   });
@@ -930,65 +452,35 @@ function closeCropModal() {
 async function plant(plotId, cropId) {
   closeCropModal();
   try {
-    const res = await fetch(`${API}/api/farm/plant`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ telegramId: state.telegramId, plotId, cropId })
-    });
+    const res = await fetch(`${API}/api/farm/plant`, { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({ telegramId:state.telegramId, plotId, cropId }) });
     const data = await res.json();
-    if (data.success) {
-      showToast(`${CROPS[cropId].emoji} ${CROPS[cropId].name} লাগানো হয়েছে!`);
-      state.user.coins -= CROPS[cropId].seedCost;
-      updateUI();
-      await loadFarm();
-    } else {
-      showToast(data.error || 'সমস্যা হয়েছে!');
-    }
-  } catch(e) { showToast('সমস্যা হয়েছে!'); }
+    if (data.success) { showToast(`${CROPS[cropId].emoji} рж▓рж╛ржЧрж╛ржирзЛ рж╣ржпрж╝рзЗржЫрзЗ!`); state.user.coins -= CROPS[cropId].seedCost; updateUI(); await loadFarm(); }
+    else showToast(data.error || 'рж╕ржорж╕рзНржпрж╛!');
+  } catch(e) { showToast('рж╕ржорж╕рзНржпрж╛ рж╣ржпрж╝рзЗржЫрзЗ!'); }
 }
 
 async function harvest(plotId) {
   const plot = state.farm.plots.find(p => p.id === plotId);
   try {
-    const res = await fetch(`${API}/api/farm/harvest`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ telegramId: state.telegramId, plotId })
-    });
+    const res = await fetch(`${API}/api/farm/harvest`, { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({ telegramId:state.telegramId, plotId }) });
     const data = await res.json();
-    if (data.success) {
-      const crop = CROPS[plot.cropId];
-      showToast(`${crop.emoji} ${crop.name} কাটা হয়েছে! +${data.xpGained} XP`);
-      await reloadUser();
-      await loadFarm();
-    } else {
-      showToast(data.error || 'সমস্যা হয়েছে!');
-    }
-  } catch(e) { showToast('সমস্যা হয়েছে!'); }
+    if (data.success) { showToast(`${CROPS[plot.cropId]?.emoji} ржХрж╛ржЯрж╛ рж╣ржпрж╝рзЗржЫрзЗ! +${data.xpGained} XP`); await reloadUser(); await loadFarm(); }
+    else showToast(data.error || 'рж╕ржорж╕рзНржпрж╛!');
+  } catch(e) { showToast('рж╕ржорж╕рзНржпрж╛!'); }
 }
 
-// =====================
-// ANIMALS
-// =====================
 function renderAnimals() {
   const grid = document.getElementById('animalsGrid');
   grid.innerHTML = '';
-
   Object.entries(ANIMALS).forEach(([type, animal]) => {
     const shed = state.farm[animal.shed];
     const locked = !shed || shed.level === 0;
     const now = new Date();
     const lastCollected = shed?.lastCollected ? new Date(shed.lastCollected) : null;
     const canCollect = !lastCollected || (now - lastCollected) >= animal.interval * 1000;
-
     const div = document.createElement('div');
-    div.className = 'animal-card' + (locked ? ' locked' : '') + (!locked && canCollect ? ' ready' : '');
-    div.innerHTML = `
-      <div class="animal-emoji">${animal.emoji}</div>
-      <div class="animal-name">${animal.name}</div>
-      <div class="animal-level">${locked ? `🔒 Lv.${animal.unlockLevel}` : `Lv.${shed.level}`}</div>
-      <div class="animal-timer">${locked ? '' : canCollect ? '✅ সংগ্রহ করুন!' : '⏳ অপেক্ষা'}</div>
-    `;
+    div.className = 'animal-card' + (locked?' locked':'') + (!locked&&canCollect?' ready':'');
+    div.innerHTML = `<div class="animal-emoji">${animal.emoji}</div><div class="animal-name">${animal.name}</div><div class="animal-level">${locked?`ЁЯФТ Lv.${animal.unlockLevel}`:`Lv.${shed.level}`}</div><div class="animal-timer">${locked?'':canCollect?'тЬЕ рж╕ржВржЧрзНрж░рж╣ ржХрж░рзБржи!':'тП│ ржЕржкрзЗржХрзНрж╖рж╛'}</div>`;
     if (!locked && canCollect) div.onclick = () => collectAnimal(type);
     grid.appendChild(div);
   });
@@ -996,24 +488,13 @@ function renderAnimals() {
 
 async function collectAnimal(animalType) {
   try {
-    const res = await fetch(`${API}/api/farm/collect/animal`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ telegramId: state.telegramId, animalType })
-    });
+    const res = await fetch(`${API}/api/farm/collect/animal`, { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({ telegramId:state.telegramId, animalType }) });
     const data = await res.json();
-    if (data.success) {
-      showToast(`${ANIMALS[animalType].emoji} সংগ্রহ হয়েছে!`);
-      await loadFarm();
-    } else {
-      showToast(data.error || 'সমস্যা!');
-    }
+    if (data.success) { showToast(`${ANIMALS[animalType].emoji} рж╕ржВржЧрзНрж░рж╣ рж╣ржпрж╝рзЗржЫрзЗ!`); await loadFarm(); }
+    else showToast(data.error || 'рж╕ржорж╕рзНржпрж╛!');
   } catch(e) {}
 }
 
-// =====================
-// MARKET
-// =====================
 function renderMarket() {
   renderWarehouse();
   renderSeedShop();
@@ -1024,7 +505,6 @@ function renderWarehouse() {
   if (!state.farm) return;
   const items = state.farm.warehouse?.items || {};
   div.innerHTML = '';
-
   let hasItems = false;
   Object.entries(items).forEach(([itemId, count]) => {
     if (count <= 0) return;
@@ -1033,146 +513,58 @@ function renderWarehouse() {
     const name = ITEM_NAMES[itemId] || itemId;
     const d = document.createElement('div');
     d.className = 'market-item';
-    d.innerHTML = `
-      <span class="market-emoji">📦</span>
-      <div class="market-info">
-        <div class="market-name">${name}</div>
-        <div class="market-stock">মজুদ: ${count}টি</div>
-        <div class="market-price">🪙 ${price} প্রতিটি</div>
-      </div>
-      <button class="sell-btn" onclick="sell('${itemId}', ${count})">সব বেচি</button>
-    `;
+    d.innerHTML = `<span class="market-emoji">ЁЯУж</span><div class="market-info"><div class="market-name">${name}</div><div class="market-stock">ржоржЬрзБржж: ${count}ржЯрж┐</div><div class="market-price">ЁЯкЩ ${price} ржкрзНрж░рждрж┐ржЯрж┐</div></div><button class="sell-btn" onclick="sell('${itemId}',${count})">рж╕ржм ржмрзЗржЪрж┐</button>`;
     div.appendChild(d);
   });
-
-  if (!hasItems) {
-    div.innerHTML = '<div style="text-align:center;padding:30px;color:var(--text2)">গুদামে কিছু নেই<br>আগে ফসল কাটুন!</div>';
-  }
+  if (!hasItems) div.innerHTML = '<div style="text-align:center;padding:30px;color:var(--text2)">ржЧрзБржжрж╛ржорзЗ ржХрж┐ржЫрзБ ржирзЗржЗ<br>ржЖржЧрзЗ ржлрж╕рж▓ ржХрж╛ржЯрзБржи!</div>';
 }
 
 function renderSeedShop() {
   const div = document.getElementById('seedShop');
   div.innerHTML = '';
   Object.entries(CROPS).forEach(([id, crop]) => {
-    const locked = state.user?.level < crop.unlockLevel;
     const d = document.createElement('div');
     d.className = 'market-item';
-    d.innerHTML = `
-      <span class="market-emoji">${crop.emoji}</span>
-      <div class="market-info">
-        <div class="market-name">${crop.name} বীজ</div>
-        <div class="market-stock">⏱ ${formatTime(crop.growTime)}</div>
-        <div class="market-price">🪙 ${crop.seedCost}</div>
-      </div>
-      <button class="sell-btn" style="background:var(--blue)" onclick="showToast('ফার্মে গিয়ে লাগান!')">বিস্তারিত</button>
-    `;
+    d.innerHTML = `<span class="market-emoji">${crop.emoji}</span><div class="market-info"><div class="market-name">${crop.name} ржмрзАржЬ</div><div class="market-stock">тП▒ ${formatTime(crop.growTime)}</div><div class="market-price">ЁЯкЩ ${crop.seedCost}</div></div><button class="sell-btn" style="background:var(--blue)" onclick="showToast('ржлрж╛рж░рзНржорзЗ ржЧрж┐ржпрж╝рзЗ рж▓рж╛ржЧрж╛ржи!')">ржмрж┐рж╕рзНрждрж╛рж░рж┐ржд</button>`;
     div.appendChild(d);
   });
 }
 
 async function sell(itemId, amount) {
   try {
-    const res = await fetch(`${API}/api/farm/sell`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ telegramId: state.telegramId, cropId: itemId, amount })
-    });
+    const res = await fetch(`${API}/api/farm/sell`, { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({ telegramId:state.telegramId, cropId:itemId, amount }) });
     const data = await res.json();
-    if (data.success) {
-      showToast(`🪙 ${data.earned} কয়েন পেয়েছেন!`);
-      await reloadUser();
-      await loadFarm();
-      renderMarket();
-    } else {
-      showToast(data.error || 'সমস্যা!');
-    }
+    if (data.success) { showToast(`ЁЯкЩ ${data.earned} ржХржпрж╝рзЗржи ржкрзЗржпрж╝рзЗржЫрзЗржи!`); await reloadUser(); await loadFarm(); renderMarket(); }
+    else showToast(data.error || 'рж╕ржорж╕рзНржпрж╛!');
   } catch(e) {}
 }
 
-function switchMarketTab(tab) {
+function switchMarketTab(tab, btn) {
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-  event.target.classList.add('active');
-  document.getElementById('marketSell').style.display = tab === 'sell' ? 'block' : 'none';
-  document.getElementById('marketBuy').style.display = tab === 'buy' ? 'block' : 'none';
+  btn.classList.add('active');
+  document.getElementById('marketSell').style.display = tab==='sell'?'block':'none';
+  document.getElementById('marketBuy').style.display = tab==='buy'?'block':'none';
 }
 
-// =====================
-// UPGRADES
-// =====================
 function renderUpgrades() {
   const div = document.getElementById('upgradeContent');
   if (!state.farm || !state.user) return;
-
   const upgrades = [
-    {
-      icon: '🌍', title: 'জমি আপগ্রেড',
-      level: state.farm.plotLevel,
-      maxLevel: 5,
-      costs: { 2: {coins:500,gems:10,tokens:2}, 3: {coins:2000,gems:30,tokens:5}, 4: {coins:8000,gems:80,tokens:15}, 5: {coins:30000,gems:200,tokens:50} },
-      action: 'upgradePlot'
-    },
-    {
-      icon: '🐔', title: 'মুরগির ঘর',
-      level: state.farm.chickenCoop?.level || 0,
-      maxLevel: 3,
-      costs: { 1: {coins:2000,gems:5}, 2: {coins:10000,gems:30,tokens:8}, 3: {coins:50000,gems:100,tokens:25} },
-      action: 'upgradeAnimal_chicken',
-      unlockLevel: 5
-    },
-    {
-      icon: '🦆', title: 'হাঁসের ঘর',
-      level: state.farm.duckPond?.level || 0,
-      maxLevel: 3,
-      costs: { 1: {coins:3000,gems:8}, 2: {coins:15000,gems:40,tokens:10}, 3: {coins:60000,gems:120,tokens:30} },
-      action: 'upgradeAnimal_duck',
-      unlockLevel: 15
-    },
-    {
-      icon: '🐄', title: 'গরুর ঘর',
-      level: state.farm.cowShed?.level || 0,
-      maxLevel: 3,
-      costs: { 1: {coins:5000,gems:10}, 2: {coins:20000,gems:50,tokens:10}, 3: {coins:80000,gems:150,tokens:30} },
-      action: 'upgradeAnimal_cow',
-      unlockLevel: 25
-    },
-    {
-      icon: '🏚️', title: 'গুদামঘর',
-      level: state.farm.warehouse?.level || 1,
-      maxLevel: 4,
-      costs: { 2: {coins:1000,tokens:5}, 3: {coins:5000,tokens:15}, 4: {coins:20000,tokens:40} },
-      action: 'upgradeWarehouse'
-    }
+    { icon:'ЁЯМН', title:'ржЬржорж┐ ржЖржкржЧрзНрж░рзЗржб', level:state.farm.plotLevel, maxLevel:5, costs:{2:{coins:500,gems:10,tokens:2},3:{coins:2000,gems:30,tokens:5},4:{coins:8000,gems:80,tokens:15},5:{coins:30000,gems:200,tokens:50}}, action:'upgradePlot' },
+    { icon:'ЁЯРФ', title:'ржорзБрж░ржЧрж┐рж░ ржШрж░', level:state.farm.chickenCoop?.level||0, maxLevel:3, costs:{1:{coins:2000,gems:5},2:{coins:10000,gems:30,tokens:8},3:{coins:50000,gems:100,tokens:25}}, action:'upgradeAnimal_chicken', unlockLevel:5 },
+    { icon:'ЁЯжЖ', title:'рж╣рж╛ржБрж╕рзЗрж░ ржШрж░', level:state.farm.duckPond?.level||0, maxLevel:3, costs:{1:{coins:3000,gems:8},2:{coins:15000,gems:40,tokens:10},3:{coins:60000,gems:120,tokens:30}}, action:'upgradeAnimal_duck', unlockLevel:15 },
+    { icon:'ЁЯРД', title:'ржЧрж░рзБрж░ ржШрж░', level:state.farm.cowShed?.level||0, maxLevel:3, costs:{1:{coins:5000,gems:10},2:{coins:20000,gems:50,tokens:10},3:{coins:80000,gems:150,tokens:30}}, action:'upgradeAnimal_cow', unlockLevel:25 },
+    { icon:'ЁЯПЪя╕П', title:'ржЧрзБржжрж╛ржоржШрж░', level:state.farm.warehouse?.level||1, maxLevel:4, costs:{2:{coins:1000,tokens:5},3:{coins:5000,tokens:15},4:{coins:20000,tokens:40}}, action:'upgradeWarehouse' }
   ];
-
   div.innerHTML = '';
   upgrades.forEach(u => {
     const nextLevel = u.level + 1;
     const cost = u.costs[nextLevel];
     const isMax = u.level >= u.maxLevel;
     const isLocked = u.unlockLevel && state.user.level < u.unlockLevel;
-
     const d = document.createElement('div');
     d.className = 'upgrade-card';
-    d.innerHTML = `
-      <div class="upgrade-header">
-        <span class="upgrade-icon">${u.icon}</span>
-        <div>
-          <div class="upgrade-title">${u.title}</div>
-          <div class="upgrade-level">লেভেল ${u.level}/${u.maxLevel}</div>
-        </div>
-      </div>
-      ${isMax ? '<div style="color:var(--green-light);text-align:center;padding:8px">✅ সর্বোচ্চ লেভেল!</div>' :
-        isLocked ? `<div style="color:var(--text2);text-align:center;padding:8px">🔒 লেভেল ${u.unlockLevel} লাগবে</div>` :
-        cost ? `
-        <div class="upgrade-cost">
-          ${cost.coins ? `<span class="cost-badge">🪙 ${cost.coins}</span>` : ''}
-          ${cost.gems ? `<span class="cost-badge">💎 ${cost.gems}</span>` : ''}
-          ${cost.tokens ? `<span class="cost-badge">🔮 ${cost.tokens}</span>` : ''}
-        </div>
-        <button class="upgrade-btn" onclick="doUpgrade('${u.action}')">আপগ্রেড করুন → লেভেল ${nextLevel}</button>
-        ` : ''
-      }
-    `;
+    d.innerHTML = `<div class="upgrade-header"><span class="upgrade-icon">${u.icon}</span><div><div class="upgrade-title">${u.title}</div><div class="upgrade-level">рж▓рзЗржнрзЗрж▓ ${u.level}/${u.maxLevel}</div></div></div>${isMax?'<div style="color:var(--green-light);text-align:center;padding:8px">тЬЕ рж╕рж░рзНржмрзЛржЪрзНржЪ рж▓рзЗржнрзЗрж▓!</div>':isLocked?`<div style="color:var(--text2);text-align:center;padding:8px">ЁЯФТ рж▓рзЗржнрзЗрж▓ ${u.unlockLevel} рж▓рж╛ржЧржмрзЗ</div>`:cost?`<div class="upgrade-cost">${cost.coins?`<span class="cost-badge">ЁЯкЩ ${cost.coins}</span>`:''}${cost.gems?`<span class="cost-badge">ЁЯТО ${cost.gems}</span>`:''}${cost.tokens?`<span class="cost-badge">ЁЯФо ${cost.tokens}</span>`:''}</div><button class="upgrade-btn" onclick="doUpgrade('${u.action}')">ржЖржкржЧрзНрж░рзЗржб тЖТ Lv.${nextLevel}</button>`:''}`;
     div.appendChild(d);
   });
 }
@@ -1180,40 +572,19 @@ function renderUpgrades() {
 async function doUpgrade(action) {
   try {
     let url, body;
-    if (action === 'upgradePlot') {
-      url = `${API}/api/farm/upgrade/plot`;
-      body = { telegramId: state.telegramId };
-    } else if (action.startsWith('upgradeAnimal_')) {
-      const type = action.split('_')[1];
-      url = `${API}/api/farm/upgrade/animal`;
-      body = { telegramId: state.telegramId, animalType: type };
-    }
-
+    if (action === 'upgradePlot') { url = `${API}/api/farm/upgrade/plot`; body = { telegramId:state.telegramId }; }
+    else if (action.startsWith('upgradeAnimal_')) { url = `${API}/api/farm/upgrade/animal`; body = { telegramId:state.telegramId, animalType:action.split('_')[1] }; }
     if (!url) return;
-
-    const res = await fetch(url, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(body)
-    });
+    const res = await fetch(url, { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(body) });
     const data = await res.json();
-    if (data.success) {
-      showToast('✅ আপগ্রেড সফল!');
-      await reloadUser();
-      await loadFarm();
-      renderUpgrades();
-    } else {
-      showToast(data.error || 'সমস্যা!');
-    }
-  } catch(e) { showToast('সমস্যা হয়েছে!'); }
+    if (data.success) { showToast('тЬЕ ржЖржкржЧрзНрж░рзЗржб рж╕ржлрж▓!'); await reloadUser(); await loadFarm(); renderUpgrades(); }
+    else showToast(data.error || 'рж╕ржорж╕рзНржпрж╛!');
+  } catch(e) { showToast('рж╕ржорж╕рзНржпрж╛!'); }
 }
 
-// =====================
-// QUESTS
-// =====================
 async function loadQuests() {
   try {
-    await fetch(`${API}/api/quest/generate/${state.telegramId}`, { method: 'POST' });
+    await fetch(`${API}/api/quest/generate/${state.telegramId}`, { method:'POST' });
     const res = await fetch(`${API}/api/quest/${state.telegramId}`);
     const data = await res.json();
     if (data.success) renderQuests(data.quests);
@@ -1222,81 +593,44 @@ async function loadQuests() {
 
 function renderQuests(quests) {
   const div = document.getElementById('questContent');
-  if (!quests.length) {
-    div.innerHTML = '<div style="text-align:center;padding:30px;color:var(--text2)">কোনো কোয়েস্ট নেই</div>';
-    return;
-  }
+  if (!quests.length) { div.innerHTML = '<div style="text-align:center;padding:30px;color:var(--text2)">ржХрзЛржирзЛ ржХрзЛржпрж╝рзЗрж╕рзНржЯ ржирзЗржЗ</div>'; return; }
   div.innerHTML = '';
   quests.forEach(q => {
-    const pct = Math.min(100, (q.progress / q.target) * 100);
+    const pct = Math.min(100, (q.progress/q.target)*100);
     const d = document.createElement('div');
     d.className = 'quest-card';
-    d.innerHTML = `
-      <div class="quest-header">
-        <span class="quest-title">${q.title}</span>
-        <span class="quest-reward">🪙 ${q.reward?.coins || 0} ${q.reward?.gems ? `💎 ${q.reward.gems}` : ''}</span>
-      </div>
-      <div class="quest-progress-bar">
-        <div class="quest-progress-fill" style="width:${pct}%"></div>
-      </div>
-      <div class="quest-progress-text ${q.completed ? 'quest-complete' : ''}">
-        ${q.completed ? '✅ সম্পন্ন!' : `${q.progress}/${q.target}`}
-      </div>
-    `;
+    d.innerHTML = `<div class="quest-header"><span class="quest-title">${q.title}</span><span class="quest-reward">ЁЯкЩ ${q.reward?.coins||0} ${q.reward?.gems?`ЁЯТО ${q.reward.gems}`:''}</span></div><div class="quest-progress-bar"><div class="quest-progress-fill" style="width:${pct}%"></div></div><div class="quest-progress-text ${q.completed?'quest-complete':''}">${q.completed?'тЬЕ рж╕ржорзНржкржирзНржи!':`${q.progress}/${q.target}`}</div>`;
     div.appendChild(d);
   });
 }
 
-// =====================
-// LEADERBOARD
-// =====================
 async function loadLeaderboard() {
   try {
     const res = await fetch(`${API}/api/leaderboard`);
     const data = await res.json();
-    if (data.success) renderLeaderboard(data.leaderboard);
+    if (data.success) {
+      const div = document.getElementById('leaderboard');
+      div.innerHTML = '';
+      data.leaderboard.forEach((u, i) => {
+        const rankClass = i===0?'gold':i===1?'silver':i===2?'bronze':'';
+        const rankEmoji = i===0?'ЁЯеЗ':i===1?'ЁЯеИ':i===2?'ЁЯеЙ':`${i+1}`;
+        const d = document.createElement('div');
+        d.className = 'leader-item';
+        d.innerHTML = `<div class="leader-rank ${rankClass}">${rankEmoji}</div><div class="leader-info"><div class="leader-name">${u.firstName||'ржХрзГрж╖ржХ'}</div><div class="leader-farm">${u.farmName}</div></div><div class="leader-score">ЁЯкЩ ${formatNum(u.totalEarned)}</div>`;
+        div.appendChild(d);
+      });
+    }
   } catch(e) {}
 }
 
-function renderLeaderboard(list) {
-  const div = document.getElementById('leaderboard');
-  div.innerHTML = '';
-  list.forEach((u, i) => {
-    const rankClass = i === 0 ? 'gold' : i === 1 ? 'silver' : i === 2 ? 'bronze' : '';
-    const rankEmoji = i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : `${i+1}`;
-    const d = document.createElement('div');
-    d.className = 'leader-item';
-    d.innerHTML = `
-      <div class="leader-rank ${rankClass}">${rankEmoji}</div>
-      <div class="leader-info">
-        <div class="leader-name">${u.firstName || u.username || 'কৃষক'}</div>
-        <div class="leader-farm">${u.farmName}</div>
-      </div>
-      <div class="leader-score">🪙 ${formatNum(u.totalEarned)}</div>
-    `;
-    div.appendChild(d);
-  });
-}
-
-// =====================
-// DAILY BONUS
-// =====================
 function showDailyBonus(bonus) {
-  document.getElementById('bonusDesc').textContent = `${bonus.streak} দিনের স্ট্রিক! 🔥`;
-  document.getElementById('bonusRewards').innerHTML = `
-    ${bonus.coins ? `<span class="bonus-reward" style="color:var(--yellow)">🪙 +${bonus.coins}</span>` : ''}
-    ${bonus.gems ? `<span class="bonus-reward" style="color:#a78bfa">💎 +${bonus.gems}</span>` : ''}
-  `;
+  document.getElementById('bonusDesc').textContent = `${bonus.streak} ржжрж┐ржирзЗрж░ рж╕рзНржЯрзНрж░рж┐ржХ! ЁЯФе`;
+  document.getElementById('bonusRewards').innerHTML = `${bonus.coins?`<span class="bonus-reward" style="color:var(--yellow)">ЁЯкЩ +${bonus.coins}</span>`:''}${bonus.gems?`<span class="bonus-reward" style="color:#a78bfa">ЁЯТО +${bonus.gems}</span>`:''}`;
   document.getElementById('bonusModal').classList.add('open');
 }
 
-function closeBonusModal() {
-  document.getElementById('bonusModal').classList.remove('open');
-}
+function closeBonusModal() { document.getElementById('bonusModal').classList.remove('open'); }
 
-// =====================
-// HELPERS
-// =====================
 async function reloadUser() {
   try {
     const res = await fetch(`${API}/api/user/profile/${state.telegramId}`);
@@ -1308,12 +642,11 @@ async function reloadUser() {
 function showPage(page, btn) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-  document.getElementById('page-' + page).classList.add('active');
+  document.getElementById('page-'+page).classList.add('active');
   btn.classList.add('active');
-
-  if (page === 'market') renderMarket();
-  if (page === 'upgrade') renderUpgrades();
-  if (page === 'profile') loadLeaderboard();
+  if (page==='market') renderMarket();
+  if (page==='upgrade') renderUpgrades();
+  if (page==='profile') loadLeaderboard();
 }
 
 function showToast(msg) {
@@ -1323,7 +656,6 @@ function showToast(msg) {
   setTimeout(() => t.classList.remove('show'), 2500);
 }
 
-// Auto refresh every 30 seconds
 setInterval(() => { if (state.telegramId) loadFarm(); }, 30000);
 </script>
 </body>
